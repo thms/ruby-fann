@@ -36,6 +36,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* #define fann_linear(steepness, sum) fann_mult(steepness, sum) */
 #define fann_linear_derive(steepness, value) (steepness)
 
+/* FANN_RELU */
+#define fann_relu_derive(value) ((value < 0.0f) ? 0.0f : 1.0f)
+
 /* FANN_SIGMOID */
 /* #define fann_sigmoid(steepness, sum) (1.0f/(1.0f + exp(-2.0f * steepness * sum))) */
 #define fann_sigmoid_real(sum) (1.0f/(1.0f + exp(-2.0f * sum)))
@@ -87,6 +90,9 @@ switch(activation_function) \
 { \
 	case FANN_LINEAR: \
 		result = (fann_type)value; \
+        break; \
+	case FANN_RELU: \
+		result = (fann_type)((value < 0) ? 0 : value); \
         break; \
 	case FANN_LINEAR_PIECE: \
 		result = (fann_type)((value < 0) ? 0 : (value > 1) ? 1 : value); \
