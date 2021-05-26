@@ -78,7 +78,7 @@ module RubyFann
       previous_neurons = nil
       layer_neurons = nil
       0.upto(max_layer) do |layer|
-        previous_neurons = layer_neurons
+        previous_neurons = neurons.find_all { |n| n[:layer] < layer }
         layer_neurons = neurons.find_all { |n| n[:layer] == layer }
 
         if previous_neurons
