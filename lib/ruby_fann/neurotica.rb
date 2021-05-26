@@ -87,8 +87,13 @@ module RubyFann
 
             layer_neurons.each do |n|
               dest_id = n.object_id.to_s
-              graph_viz.add_edge(
-                graph_node_hash[node_id],
+              # graph_viz.add_edge(
+              #   graph_node_hash[node_id],
+              #   graph_node_hash[dest_id],
+              #   weight: '10',
+              #   color: "#{connector_colors[layer % connector_colors.length]}"
+              # )
+              graph_node_hash[node_id].connect(
                 graph_node_hash[dest_id],
                 weight: '10',
                 color: "#{connector_colors[layer % connector_colors.length]}"
@@ -98,12 +103,13 @@ module RubyFann
         end
 
       end
-
-      if args[:three_dimensional]
-        graph_viz.output(vrml: output_path)
-      else
-        graph_viz.output(png: output_path)
-      end
+      data = Graphviz.output(graph_viz)
+      File.write("./tmp/network.pdf", data)
+        # if args[:three_dimensional]
+      #   graph_viz.output(vrml: output_path)
+      # else
+      #   graph_viz.output(png: output_path)
+      # end
 
 
     end

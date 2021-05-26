@@ -146,7 +146,7 @@ VALUE activation_function_to_sym(enum fann_activationfunc_enum fn)
     }   else if(fn==FANN_COS) {
         activation_function = ID2SYM(rb_intern("cos"));
     }   else if(fn==FANN_RELU) {
-        activation_function = ID2SYM(rb_intern("relu")); 
+        activation_function = ID2SYM(rb_intern("relu"));
     }   else {
         rb_raise(rb_eRuntimeError, "Unrecognized activation function: [%d]", fn);
     }
@@ -268,10 +268,26 @@ static VALUE fann_initialize(VALUE self, VALUE hash)
     {
         // Initialize as shortcut, suitable for cascade training:
         //ann = fann_create_shortcut_array(num_layers, layers);
+
         Check_Type(num_inputs, T_FIXNUM);
         Check_Type(num_outputs, T_FIXNUM);
+        Check_Type(hidden_neurons, T_ARRAY);
+        // Initialize layers:
+        unsigned int num_layers=RARRAY_LEN(hidden_neurons) + 2;
+        unsigned int layers[num_layers];
 
-        ann = fann_create_shortcut(2, NUM2INT(num_inputs), NUM2INT(num_outputs));
+        // Input:
+        layers[0]=NUM2INT(num_inputs);
+        // Output:
+        layers[num_layers-1]=NUM2INT(num_outputs);
+        // Hidden:
+        int i;
+        for (i=1; i<=num_layers-2; i++) {
+            layers[i]=NUM2UINT(RARRAY_PTR(hidden_neurons)[i-1]);
+        }
+
+        ann = fann_create_shortcut_array(num_layers, layers);
+      // ann = fann_create_shortcut(2, NUM2INT(num_inputs), NUM2INT(num_outputs));
         // printf("Created RubyFann::Shortcut [%d].\n", ann);
     }
     else
