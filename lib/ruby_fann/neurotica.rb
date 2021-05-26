@@ -31,10 +31,10 @@ module RubyFann
     #   If args[:three_dimensional] is set, then a 3d VRML graph will be generated (experimental)
     def graph(neural_net, output_path, args = {})
       if args[:three_dimensional]
-        graph_viz = GraphViz::new( 'G', :dim=>'3') # , :size=>'17,11'
+        graph_viz = Graphviz::Graph.new( 'G', :dim=>'3') # , :size=>'17,11'
         shape = 'point'
       else
-        graph_viz = GraphViz::new( 'G', :dim=>'2') # , :size=>'17,11'
+        graph_viz = Graphviz::Graph.new( 'G', :dim=>'2') # , :size=>'17,11'
         shape = 'egg'
       end
 
