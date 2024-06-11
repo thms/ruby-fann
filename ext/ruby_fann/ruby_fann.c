@@ -9,48 +9,48 @@ static VALUE m_rb_fann_standard_class;
 static VALUE m_rb_fann_shortcut_class;
 static VALUE m_rb_fann_train_data_class;
 
-#define RETURN_FANN_INT(fn) \
-struct fann* f; \
-Data_Get_Struct (self, struct fann, f); \
+#define RETURN_FANN_INT(fn)                \
+    struct fann *f;                        \
+    Data_Get_Struct(self, struct fann, f); \
 return INT2NUM(fn(f));
 
-#define SET_FANN_INT(attr_name, fann_fn) \
-Check_Type(attr_name, T_FIXNUM); \
-struct fann* f; \
+#define SET_FANN_INT(attr_name, fann_fn)   \
+    Check_Type(attr_name, T_FIXNUM);       \
+    struct fann *f;                        \
 Data_Get_Struct(self, struct fann, f); \
-fann_fn(f, NUM2INT(attr_name)); \
+    fann_fn(f, NUM2INT(attr_name));        \
 return 0;
 
-#define RETURN_FANN_UINT(fn) \
-struct fann* f; \
-Data_Get_Struct (self, struct fann, f); \
-return UINT2NUM(fn(f));
+#define RETURN_FANN_UINT(fn)               \
+    struct fann *f;                        \
+    Data_Get_Struct(self, struct fann, f); \
+    return rb_int_new(fn(f));
 
-#define SET_FANN_UINT(attr_name, fann_fn) \
-Check_Type(attr_name, T_FIXNUM); \
-struct fann* f; \
+#define SET_FANN_UINT(attr_name, fann_fn)  \
+    Check_Type(attr_name, T_FIXNUM);       \
+    struct fann *f;                        \
 Data_Get_Struct(self, struct fann, f); \
-fann_fn(f, NUM2UINT(attr_name)); \
+    fann_fn(f, NUM2UINT(attr_name));       \
 return 0;
 
 // Converts float return values to a double with same precision, avoids floating point errors.
-#define RETURN_FANN_FLT(fn) \
-struct fann* f; \
-Data_Get_Struct (self, struct fann, f); \
-char buffy[20]; \
-sprintf(buffy, "%0.6g", fn(f)); \
+#define RETURN_FANN_FLT(fn)                \
+    struct fann *f;                        \
+    Data_Get_Struct(self, struct fann, f); \
+    char buffy[20];                        \
+    sprintf(buffy, "%0.6g", fn(f));        \
 return rb_float_new(atof(buffy));
 
-#define SET_FANN_FLT(attr_name, fann_fn) \
-Check_Type(attr_name, T_FLOAT); \
-struct fann* f; \
+#define SET_FANN_FLT(attr_name, fann_fn)   \
+    Check_Type(attr_name, T_FLOAT);        \
+    struct fann *f;                        \
 Data_Get_Struct(self, struct fann, f); \
-fann_fn(f, NUM2DBL(attr_name)); \
+    fann_fn(f, NUM2DBL(attr_name));        \
 return self;
 
-#define RETURN_FANN_DBL(fn) \
-struct fann* f; \
-Data_Get_Struct (self, struct fann, f); \
+#define RETURN_FANN_DBL(fn)                \
+    struct fann *f;                        \
+    Data_Get_Struct(self, struct fann, f); \
 return rb_float_new(fn(f));
 
 #define SET_FANN_DBL SET_FANN_FLT
@@ -58,47 +58,86 @@ return rb_float_new(fn(f));
 // Convert ruby symbol to corresponding FANN enum type for activation function:
 enum fann_activationfunc_enum sym_to_activation_function(VALUE activation_func)
 {
-    ID id=SYM2ID(activation_func);
+    ID id = SYM2ID(activation_func);
     enum fann_activationfunc_enum activation_function;
-    if(id==rb_intern("linear")) {
+    if (id == rb_intern("linear"))
+    {
         activation_function = FANN_LINEAR;
-    }   else if(id==rb_intern("threshold")) {
+    }
+    else if (id == rb_intern("threshold"))
+    {
         activation_function = FANN_THRESHOLD;
-    }   else if(id==rb_intern("threshold_symmetric")) {
+    }
+    else if (id == rb_intern("threshold_symmetric"))
+    {
         activation_function = FANN_THRESHOLD_SYMMETRIC;
-    }   else if(id==rb_intern("sigmoid")) {
+    }
+    else if (id == rb_intern("sigmoid"))
+    {
         activation_function = FANN_SIGMOID;
-    }   else if(id==rb_intern("sigmoid_stepwise")) {
+    }
+    else if (id == rb_intern("sigmoid_stepwise"))
+    {
         activation_function = FANN_SIGMOID_STEPWISE;
-    }   else if(id==rb_intern("sigmoid_symmetric")) {
+    }
+    else if (id == rb_intern("sigmoid_symmetric"))
+    {
         activation_function = FANN_SIGMOID_SYMMETRIC;
-    }   else if(id==rb_intern("sigmoid_symmetric_stepwise")) {
+    }
+    else if (id == rb_intern("sigmoid_symmetric_stepwise"))
+    {
         activation_function = FANN_SIGMOID_SYMMETRIC_STEPWISE;
-    }   else if(id==rb_intern("gaussian")) {
+    }
+    else if (id == rb_intern("gaussian"))
+    {
         activation_function = FANN_GAUSSIAN;
-    }   else if(id==rb_intern("gaussian_symmetric")) {
+    }
+    else if (id == rb_intern("gaussian_symmetric"))
+    {
         activation_function = FANN_GAUSSIAN_SYMMETRIC;
-    }   else if(id==rb_intern("gaussian_stepwise")) {
+    }
+    else if (id == rb_intern("gaussian_stepwise"))
+    {
         activation_function = FANN_GAUSSIAN_STEPWISE;
-    }   else if(id==rb_intern("elliot")) {
+    }
+    else if (id == rb_intern("elliot"))
+    {
         activation_function = FANN_ELLIOT;
-    }   else if(id==rb_intern("elliot_symmetric")) {
+    }
+    else if (id == rb_intern("elliot_symmetric"))
+    {
         activation_function = FANN_ELLIOT_SYMMETRIC;
-    }   else if(id==rb_intern("linear_piece")) {
+    }
+    else if (id == rb_intern("linear_piece"))
+    {
         activation_function = FANN_LINEAR_PIECE;
-    }   else if(id==rb_intern("linear_piece_symmetric")) {
+    }
+    else if (id == rb_intern("linear_piece_symmetric"))
+    {
         activation_function = FANN_LINEAR_PIECE_SYMMETRIC;
-    }   else if(id==rb_intern("sin_symmetric")) {
+    }
+    else if (id == rb_intern("sin_symmetric"))
+    {
         activation_function = FANN_SIN_SYMMETRIC;
-    }   else if(id==rb_intern("cos_symmetric")) {
+    }
+    else if (id == rb_intern("cos_symmetric"))
+    {
         activation_function = FANN_COS_SYMMETRIC;
-    }   else if(id==rb_intern("sin")) {
+    }
+    else if (id == rb_intern("sin"))
+    {
         activation_function = FANN_SIN;
-    }   else if(id==rb_intern("cos")) {
+    }
+    else if (id == rb_intern("cos"))
+    {
         activation_function = FANN_COS;
-    }   else if(id==rb_intern("relu")) {
+    }
+    else if(id==rb_intern("relu"))
+    {
         activation_function = FANN_RELU;
-    }   else {
+    }
+    else
+    {
         rb_raise(rb_eRuntimeError, "Unrecognized activation function: [%s]", rb_id2name(SYM2ID(activation_func)));
     }
     return activation_function;
@@ -109,65 +148,103 @@ VALUE activation_function_to_sym(enum fann_activationfunc_enum fn)
 {
     VALUE activation_function;
 
-    if(fn==FANN_LINEAR) {
+    if (fn == FANN_LINEAR)
+    {
         activation_function = ID2SYM(rb_intern("linear"));
-    }   else if(fn==FANN_THRESHOLD) {
+    }
+    else if (fn == FANN_THRESHOLD)
+    {
         activation_function = ID2SYM(rb_intern("threshold"));
-    }   else if(fn==FANN_THRESHOLD_SYMMETRIC) {
+    }
+    else if (fn == FANN_THRESHOLD_SYMMETRIC)
+    {
         activation_function = ID2SYM(rb_intern("threshold_symmetric"));
-    }   else if(fn==FANN_SIGMOID) {
+    }
+    else if (fn == FANN_SIGMOID)
+    {
         activation_function = ID2SYM(rb_intern("sigmoid"));
-    }   else if(fn==FANN_SIGMOID_STEPWISE) {
+    }
+    else if (fn == FANN_SIGMOID_STEPWISE)
+    {
         activation_function = ID2SYM(rb_intern("sigmoid_stepwise"));
-    }   else if(fn==FANN_SIGMOID_SYMMETRIC) {
+    }
+    else if (fn == FANN_SIGMOID_SYMMETRIC)
+    {
         activation_function = ID2SYM(rb_intern("sigmoid_symmetric"));
-    }   else if(fn==FANN_SIGMOID_SYMMETRIC_STEPWISE) {
+    }
+    else if (fn == FANN_SIGMOID_SYMMETRIC_STEPWISE)
+    {
         activation_function = ID2SYM(rb_intern("sigmoid_symmetric_stepwise"));
-    }   else if(fn==FANN_GAUSSIAN) {
+    }
+    else if (fn == FANN_GAUSSIAN)
+    {
         activation_function = ID2SYM(rb_intern("gaussian"));
-    }   else if(fn==FANN_GAUSSIAN_SYMMETRIC) {
+    }
+    else if (fn == FANN_GAUSSIAN_SYMMETRIC)
+    {
         activation_function = ID2SYM(rb_intern("gaussian_symmetric"));
-    }   else if(fn==FANN_GAUSSIAN_STEPWISE) {
+    }
+    else if (fn == FANN_GAUSSIAN_STEPWISE)
+    {
         activation_function = ID2SYM(rb_intern("gaussian_stepwise"));
-    }   else if(fn==FANN_ELLIOT) {
+    }
+    else if (fn == FANN_ELLIOT)
+    {
         activation_function = ID2SYM(rb_intern("elliot"));
-    }   else if(fn==FANN_ELLIOT_SYMMETRIC) {
+    }
+    else if (fn == FANN_ELLIOT_SYMMETRIC)
+    {
         activation_function = ID2SYM(rb_intern("elliot_symmetric"));
-    }   else if(fn==FANN_LINEAR_PIECE) {
+    }
+    else if (fn == FANN_LINEAR_PIECE)
+    {
         activation_function = ID2SYM(rb_intern("linear_piece"));
-    }   else if(fn==FANN_LINEAR_PIECE_SYMMETRIC) {
+    }
+    else if (fn == FANN_LINEAR_PIECE_SYMMETRIC)
+    {
         activation_function = ID2SYM(rb_intern("linear_piece_symmetric"));
-    }   else if(fn==FANN_SIN_SYMMETRIC) {
+    }
+    else if (fn == FANN_SIN_SYMMETRIC)
+    {
         activation_function = ID2SYM(rb_intern("sin_symmetric"));
-    }   else if(fn==FANN_COS_SYMMETRIC) {
+    }
+    else if (fn == FANN_COS_SYMMETRIC)
+    {
         activation_function = ID2SYM(rb_intern("cos_symmetric"));
-    }   else if(fn==FANN_SIN) {
+    }
+    else if (fn == FANN_SIN)
+    {
         activation_function = ID2SYM(rb_intern("sin"));
-    }   else if(fn==FANN_COS) {
+    }
+    else if (fn == FANN_COS)
+    {
         activation_function = ID2SYM(rb_intern("cos"));
-    }   else if(fn==FANN_RELU) {
+    }
+    else if(fn == FANN_RELU)
+    {
         activation_function = ID2SYM(rb_intern("relu"));
-    }   else {
+    }
+    else
+    {
         rb_raise(rb_eRuntimeError, "Unrecognized activation function: [%d]", fn);
     }
     return activation_function;
 }
 
-
 // Unused for now:
-static void fann_mark (struct fann* ann){}
+static void fann_mark(struct fann *ann) {}
 
 // #define DEBUG 1
 
 // Free memory associated with FANN:
-static void fann_free (struct fann* ann)
+static void fann_free(struct fann *ann)
 {
   fann_destroy(ann);
     // ("Destroyed FANN network [%d].\n", ann);
 }
 
 // Free memory associated with FANN Training data:
-static void fann_training_data_free (struct fann_train_data* train_data)
+static void fann_training_data_free(struct fann_train_data *train_data)
 {
   fann_destroy_train(train_data);
     // printf("Destroyed Training data [%d].\n", train_data);
@@ -175,18 +252,17 @@ static void fann_training_data_free (struct fann_train_data* train_data)
 
 // Create wrapper, but don't allocate anything...do that in
 // initialize, so we can construct with args:
-static VALUE fann_allocate (VALUE klass)
+static VALUE fann_allocate(VALUE klass)
 {
-    return Data_Wrap_Struct (klass, fann_mark, fann_free, 0);
+    return Data_Wrap_Struct(klass, fann_mark, fann_free, 0);
 }
 
 // Create wrapper, but don't allocate annything...do that in
 // initialize, so we can construct with args:
-static VALUE fann_training_data_allocate (VALUE klass)
+static VALUE fann_training_data_allocate(VALUE klass)
 {
-    return Data_Wrap_Struct (klass, fann_mark, fann_training_data_free, 0);
+    return Data_Wrap_Struct(klass, fann_mark, fann_training_data_free, 0);
 }
-
 
 // static VALUE invoke_training_callback(VALUE self)
 // {
@@ -217,13 +293,13 @@ static int FANN_API fann_training_callback(struct fann *ann, struct fann_train_d
 
     VALUE callback = rb_funcall(self, rb_intern("training_callback"), 1, args);
 
-    if (TYPE(callback)!=T_FIXNUM)
+    if (TYPE(callback) != T_FIXNUM)
     {
-        rb_raise (rb_eRuntimeError, "Callback method must return an integer (-1 to stop training).");
+        rb_raise(rb_eRuntimeError, "Callback method must return an integer (-1 to stop training).");
     }
 
     int status = NUM2INT(callback);
-    if (status==-1)
+    if (status == -1)
     {
         printf("Callback method returned -1; training will stop.\n");
     }
@@ -255,8 +331,8 @@ static VALUE fann_initialize(VALUE self, VALUE hash)
     VALUE num_outputs = rb_hash_aref(hash, ID2SYM(rb_intern("num_outputs")));
     VALUE hidden_neurons = rb_hash_aref(hash, ID2SYM(rb_intern("hidden_neurons")));
   // printf("initializing\n\n\n");
-    struct fann* ann;
-    if (TYPE(filename)==T_STRING)
+    struct fann *ann;
+    if (TYPE(filename) == T_STRING)
     {
         // Initialize with file:
         // train_data = fann_read_train_from_file(StringValuePtr(filename));
@@ -264,30 +340,14 @@ static VALUE fann_initialize(VALUE self, VALUE hash)
         ann = fann_create_from_file(StringValuePtr(filename));
     // printf("Created RubyFann::Standard [%d] from file [%s].\n", ann, StringValuePtr(filename));
     }
-    else if(rb_obj_is_kind_of(self, m_rb_fann_shortcut_class))
+    else if (rb_obj_is_kind_of(self, m_rb_fann_shortcut_class))
     {
         // Initialize as shortcut, suitable for cascade training:
-        //ann = fann_create_shortcut_array(num_layers, layers);
-
+        // ann = fann_create_shortcut_array(num_layers, layers);
         Check_Type(num_inputs, T_FIXNUM);
         Check_Type(num_outputs, T_FIXNUM);
-        Check_Type(hidden_neurons, T_ARRAY);
-        // Initialize layers:
-        unsigned int num_layers=RARRAY_LEN(hidden_neurons) + 2;
-        unsigned int layers[num_layers];
 
-        // Input:
-        layers[0]=NUM2INT(num_inputs);
-        // Output:
-        layers[num_layers-1]=NUM2INT(num_outputs);
-        // Hidden:
-        int i;
-        for (i=1; i<=num_layers-2; i++) {
-            layers[i]=NUM2UINT(RARRAY_PTR(hidden_neurons)[i-1]);
-        }
-
-        ann = fann_create_shortcut_array(num_layers, layers);
-      // ann = fann_create_shortcut(2, NUM2INT(num_inputs), NUM2INT(num_outputs));
+        ann = fann_create_shortcut(2, NUM2INT(num_inputs), NUM2INT(num_outputs));
         // printf("Created RubyFann::Shortcut [%d].\n", ann);
     }
     else
@@ -298,30 +358,29 @@ static VALUE fann_initialize(VALUE self, VALUE hash)
         Check_Type(num_outputs, T_FIXNUM);
 
         // Initialize layers:
-        unsigned int num_layers=RARRAY_LEN(hidden_neurons) + 2;
+        unsigned int num_layers = RARRAY_LEN(hidden_neurons) + 2;
         unsigned int layers[num_layers];
 
         // Input:
-        layers[0]=NUM2INT(num_inputs);
+        layers[0] = NUM2INT(num_inputs);
         // Output:
-        layers[num_layers-1]=NUM2INT(num_outputs);
+        layers[num_layers - 1] = NUM2INT(num_outputs);
         // Hidden:
-        int i;
-        for (i=1; i<=num_layers-2; i++) {
-            layers[i]=NUM2UINT(RARRAY_PTR(hidden_neurons)[i-1]);
+        unsigned int i;
+        for (i = 1; i <= num_layers - 2; i++)
+        {
+            layers[i] = NUM2INT(RARRAY_PTR(hidden_neurons)[i - 1]);
         }
-
         ann = fann_create_standard_array(num_layers, layers);
-        // printf("Created RubyFann::Standard [%d].\n", ann);
     }
 
     DATA_PTR(self) = ann;
 
     // printf("Checking for callback...");
 
-    //int callback = rb_protect(invoke_training_callback, (self), &status);
-    // VALUE callback = rb_funcall(DATA_PTR(self), "training_callback", 0);
-    if(rb_respond_to(self, rb_intern("training_callback")))
+    // int callback = rb_protect(invoke_training_callback, (self), &status);
+    //  VALUE callback = rb_funcall(DATA_PTR(self), "training_callback", 0);
+    if (rb_respond_to(self, rb_intern("training_callback")))
     {
         fann_set_callback(ann, &fann_training_callback);
         fann_set_user_data(ann, self);
@@ -351,34 +410,39 @@ static VALUE fann_initialize(VALUE self, VALUE hash)
 */
 static VALUE fann_train_data_initialize(VALUE self, VALUE hash)
 {
-    struct fann_train_data* train_data;
+    struct fann_train_data *train_data;
     Check_Type(hash, T_HASH);
 
     VALUE filename = rb_hash_aref(hash, ID2SYM(rb_intern("filename")));
     VALUE inputs = rb_hash_aref(hash, ID2SYM(rb_intern("inputs")));
     VALUE desired_outputs = rb_hash_aref(hash, ID2SYM(rb_intern("desired_outputs")));
 
-    if (TYPE(filename)==T_STRING)
+    if (TYPE(filename) == T_STRING)
     {
         train_data = fann_read_train_from_file(StringValuePtr(filename));
         DATA_PTR(self) = train_data;
     }
-    else if (TYPE(inputs)==T_ARRAY)
+    else if (TYPE(inputs) == T_ARRAY)
     {
-        if (TYPE(desired_outputs)!=T_ARRAY)
+        if (TYPE(desired_outputs) != T_ARRAY)
         {
-            rb_raise (rb_eRuntimeError, "[desired_outputs] must be present when [inputs] used.");
+            rb_raise(rb_eRuntimeError, "[desired_outputs] must be present when [inputs] used.");
         }
 
         if (RARRAY_LEN(inputs) < 1)
         {
-            rb_raise (rb_eRuntimeError, "[inputs/desired_outputs] must contain at least one value.");
+            rb_raise(rb_eRuntimeError, "[inputs] must contain at least one value.");
+        }
+
+        if (RARRAY_LEN(desired_outputs) < 1)
+        {
+            rb_raise(rb_eRuntimeError, "[desired_outputs] must contain at least one value.");
         }
 
         // The data is here, start constructing:
-        if(RARRAY_LEN(inputs) != RARRAY_LEN(desired_outputs))
+        if (RARRAY_LEN(inputs) != RARRAY_LEN(desired_outputs))
         {
-            rb_raise (
+            rb_raise(
                 rb_eRuntimeError,
                 "Number of inputs must match number of outputs: (%d != %d)",
                 (int)RARRAY_LEN(inputs),
@@ -390,12 +454,11 @@ static VALUE fann_train_data_initialize(VALUE self, VALUE hash)
     }
     else
     {
-        rb_raise (rb_eRuntimeError, "Must construct with a filename(string) or inputs/desired_outputs(arrays).  All args passed via hash with symbols as keys.");
+        rb_raise(rb_eRuntimeError, "Must construct with a filename(string) or inputs/desired_outputs(arrays).  All args passed via hash with symbols as keys.");
     }
 
     return (VALUE)train_data;
 }
-
 
 /** call-seq: save(filename)
 
@@ -404,8 +467,8 @@ static VALUE fann_train_data_initialize(VALUE self, VALUE hash)
 static VALUE training_save(VALUE self, VALUE filename)
 {
     Check_Type(filename, T_STRING);
-    struct fann_train_data* t;
-    Data_Get_Struct (self, struct fann_train_data, t);
+    struct fann_train_data *t;
+    Data_Get_Struct(self, struct fann_train_data, t);
     fann_save_train(t, StringValuePtr(filename));
     return self;
 }
@@ -414,8 +477,8 @@ static VALUE training_save(VALUE self, VALUE filename)
     This is recommended for incremental training, while it will have no influence during batch training.*/
 static VALUE shuffle(VALUE self)
 {
-    struct fann_train_data* t;
-    Data_Get_Struct (self, struct fann_train_data, t);
+    struct fann_train_data *t;
+    Data_Get_Struct(self, struct fann_train_data, t);
     fann_shuffle_train_data(t);
     return self;
 }
@@ -423,9 +486,9 @@ static VALUE shuffle(VALUE self)
 /** Length of training data*/
 static VALUE length_train_data(VALUE self)
 {
-    struct fann_train_data* t;
-    Data_Get_Struct (self, struct fann_train_data, t);
-    return(UINT2NUM(fann_length_train_data(t)));
+    struct fann_train_data *t;
+    Data_Get_Struct(self, struct fann_train_data, t);
+    return (UINT2NUM(fann_length_train_data(t)));
     return self;
 }
 
@@ -443,7 +506,7 @@ static VALUE set_activation_function(VALUE self, VALUE activation_func, VALUE la
     Check_Type(layer, T_FIXNUM);
     Check_Type(neuron, T_FIXNUM);
 
-    struct fann* f;
+    struct fann *f;
     Data_Get_Struct(self, struct fann, f);
     fann_set_activation_function(f, sym_to_activation_function(activation_func), NUM2INT(layer), NUM2INT(neuron));
     return self;
@@ -459,7 +522,7 @@ static VALUE set_activation_function(VALUE self, VALUE activation_func, VALUE la
 static VALUE set_activation_function_hidden(VALUE self, VALUE activation_func)
 {
     Check_Type(activation_func, T_SYMBOL);
-    struct fann* f;
+    struct fann *f;
     Data_Get_Struct(self, struct fann, f);
     fann_set_activation_function_hidden(f, sym_to_activation_function(activation_func));
     return self;
@@ -480,7 +543,7 @@ static VALUE set_activation_function_layer(VALUE self, VALUE activation_func, VA
 {
     Check_Type(activation_func, T_SYMBOL);
     Check_Type(layer, T_FIXNUM);
-    struct fann* f;
+    struct fann *f;
     Data_Get_Struct(self, struct fann, f);
     fann_set_activation_function_layer(f, sym_to_activation_function(activation_func), NUM2INT(layer));
     return self;
@@ -497,7 +560,7 @@ static VALUE get_activation_function(VALUE self, VALUE layer, VALUE neuron)
 {
     Check_Type(layer, T_FIXNUM);
     Check_Type(neuron, T_FIXNUM);
-    struct fann* f;
+    struct fann *f;
     Data_Get_Struct(self, struct fann, f);
     fann_type val = fann_get_activation_function(f, NUM2INT(layer), NUM2INT(neuron));
     return activation_function_to_sym(val);
@@ -514,7 +577,7 @@ static VALUE get_activation_function(VALUE self, VALUE layer, VALUE neuron)
 static VALUE set_activation_function_output(VALUE self, VALUE activation_func)
 {
     Check_Type(activation_func, T_SYMBOL);
-    struct fann* f;
+    struct fann *f;
     Data_Get_Struct(self, struct fann, f);
     fann_set_activation_function_output(f, sym_to_activation_function(activation_func));
     return self;
@@ -528,7 +591,7 @@ static VALUE get_activation_steepness(VALUE self, VALUE layer, VALUE neuron)
 {
     Check_Type(layer, T_FIXNUM);
     Check_Type(neuron, T_FIXNUM);
-    struct fann* f;
+    struct fann *f;
     Data_Get_Struct(self, struct fann, f);
     fann_type val = fann_get_activation_steepness(f, NUM2INT(layer), NUM2INT(neuron));
     return rb_float_new(val);
@@ -544,7 +607,7 @@ static VALUE set_activation_steepness(VALUE self, VALUE steepness, VALUE layer, 
     Check_Type(layer, T_FIXNUM);
     Check_Type(neuron, T_FIXNUM);
 
-    struct fann* f;
+    struct fann *f;
     Data_Get_Struct(self, struct fann, f);
     fann_set_activation_steepness(f, NUM2DBL(steepness), NUM2INT(layer), NUM2INT(neuron));
     return self;
@@ -567,7 +630,7 @@ static VALUE set_activation_steepness_layer(VALUE self, VALUE steepness, VALUE l
     Check_Type(steepness, T_FLOAT);
     Check_Type(layer, T_FIXNUM);
 
-    struct fann* f;
+    struct fann *f;
     Data_Get_Struct(self, struct fann, f);
     fann_set_activation_steepness_layer(f, NUM2DBL(steepness), NUM2INT(layer));
     return self;
@@ -701,9 +764,9 @@ static VALUE set_rprop_delta_zero(VALUE self, VALUE rprop_delta_zero)
 /** Return array of bias(es)*/
 static VALUE get_bias_array(VALUE self)
 {
-    struct fann* f;
+    struct fann *f;
     unsigned int num_layers;
-    Data_Get_Struct (self, struct fann, f);
+    Data_Get_Struct(self, struct fann, f);
     num_layers = fann_get_num_layers(f);
     unsigned int layers[num_layers];
     fann_get_bias_array(f, layers);
@@ -711,8 +774,8 @@ static VALUE get_bias_array(VALUE self)
     // Create ruby array & set outputs:
     VALUE arr;
     arr = rb_ary_new();
-    int i;
-    for (i=0; i<num_layers; i++)
+    unsigned int i;
+    for (i = 0; i < num_layers; i++)
     {
         rb_ary_push(arr, INT2NUM(layers[i]));
     }
@@ -754,9 +817,9 @@ static VALUE get_neurons(VALUE self, VALUE layer)
     struct fann_layer *layer_it;
     struct fann_neuron *neuron_it;
 
-    struct fann* f;
+    struct fann *f;
     unsigned int i;
-    Data_Get_Struct (self, struct fann, f);
+    Data_Get_Struct(self, struct fann, f);
 
     VALUE neuron_array = rb_ary_new();
     VALUE activation_function_sym = ID2SYM(rb_intern("activation_function"));
@@ -767,16 +830,17 @@ static VALUE get_neurons(VALUE self, VALUE layer)
     VALUE connections_sym = ID2SYM(rb_intern("connections"));
     unsigned int layer_num = 0;
 
-
-    int nuke_bias_neuron = (fann_get_network_type(f)==FANN_NETTYPE_LAYER);
-    for(layer_it = f->first_layer; layer_it != f->last_layer; layer_it++)
+    int nuke_bias_neuron = (fann_get_network_type(f) == FANN_NETTYPE_LAYER);
+    for (layer_it = f->first_layer; layer_it != f->last_layer; layer_it++)
     {
-        for(neuron_it = layer_it->first_neuron; neuron_it != layer_it->last_neuron; neuron_it++)
+        for (neuron_it = layer_it->first_neuron; neuron_it != layer_it->last_neuron; neuron_it++)
         {
-            if (nuke_bias_neuron && (neuron_it==(layer_it->last_neuron)-1)) continue;
+            if (nuke_bias_neuron && (neuron_it == (layer_it->last_neuron) - 1))
+                continue;
             // Create array of connection indicies:
             VALUE connection_array = rb_ary_new();
-            for (i = neuron_it->first_con; i < neuron_it->last_con; i++) {
+            for (i = neuron_it->first_con; i < neuron_it->last_con; i++)
+            {
                 rb_ary_push(connection_array, INT2NUM(f->connections[i] - f->first_layer->first_neuron));
             }
 
@@ -806,16 +870,15 @@ static VALUE get_neurons(VALUE self, VALUE layer)
   //     }
   //     case FANN_NETTYPE_SHORTCUT: {
 
-
     return neuron_array;
 }
 
 /** Get list of layers in array format where each element contains number of neurons in that layer*/
 static VALUE get_layer_array(VALUE self)
 {
-    struct fann* f;
+    struct fann *f;
     unsigned int num_layers;
-    Data_Get_Struct (self, struct fann, f);
+    Data_Get_Struct(self, struct fann, f);
     num_layers = fann_get_num_layers(f);
     unsigned int layers[num_layers];
     fann_get_layer_array(f, layers);
@@ -823,8 +886,8 @@ static VALUE get_layer_array(VALUE self)
     // Create ruby array & set outputs:
     VALUE arr;
     arr = rb_ary_new();
-    int i;
-    for (i=0; i<num_layers; i++)
+    unsigned int i;
+    for (i = 0; i < num_layers; i++)
     {
         rb_ary_push(arr, INT2NUM(layers[i]));
     }
@@ -842,8 +905,8 @@ static VALUE get_MSE(VALUE self)
     This function also resets the number of bits that fail.*/
 static VALUE reset_MSE(VALUE self)
 {
-    struct fann* f;
-    Data_Get_Struct (self, struct fann, f);
+    struct fann *f;
+    Data_Get_Struct(self, struct fann, f);
     fann_reset_MSE(f);
     return self;
 }
@@ -851,18 +914,18 @@ static VALUE reset_MSE(VALUE self)
 /** Get the type of network.  Returns as ruby symbol (one of :shortcut, :layer)*/
 static VALUE get_network_type(VALUE self)
 {
-    struct fann* f;
+    struct fann *f;
     enum fann_nettype_enum net_type;
     VALUE ret_val;
-    Data_Get_Struct (self, struct fann, f);
+    Data_Get_Struct(self, struct fann, f);
 
     net_type = fann_get_network_type(f);
 
-    if(net_type==FANN_NETTYPE_LAYER)
+    if (net_type == FANN_NETTYPE_LAYER)
     {
         ret_val = ID2SYM(rb_intern("layer")); // (rb_str_new2("FANN_NETTYPE_LAYER"));
     }
-    else if(net_type==FANN_NETTYPE_SHORTCUT)
+    else if (net_type == FANN_NETTYPE_SHORTCUT)
     {
         ret_val = ID2SYM(rb_intern("shortcut")); // (rb_str_new2("FANN_NETTYPE_SHORTCUT"));
     }
@@ -907,19 +970,24 @@ static VALUE set_train_error_function(VALUE self, VALUE train_error_function)
 {
     Check_Type(train_error_function, T_SYMBOL);
 
-    ID id=SYM2ID(train_error_function);
+    ID id = SYM2ID(train_error_function);
     enum fann_errorfunc_enum fann_train_error_function;
 
-    if(id==rb_intern("linear")) {
+    if (id == rb_intern("linear"))
+    {
         fann_train_error_function = FANN_ERRORFUNC_LINEAR;
-    }   else if(id==rb_intern("tanh")) {
+    }
+    else if (id == rb_intern("tanh"))
+    {
         fann_train_error_function = FANN_ERRORFUNC_TANH;
-    }   else {
+    }
+    else
+    {
         rb_raise(rb_eRuntimeError, "Unrecognized train error function: [%s]", rb_id2name(SYM2ID(train_error_function)));
     }
 
-    struct fann* f;
-    Data_Get_Struct (self, struct fann, f);
+    struct fann *f;
+    Data_Get_Struct(self, struct fann, f);
     fann_set_train_error_function(f, fann_train_error_function);
     return self;
 }
@@ -928,18 +996,18 @@ static VALUE set_train_error_function(VALUE self, VALUE train_error_function)
             :linear, :tanh*/
 static VALUE get_train_error_function(VALUE self)
 {
-    struct fann* f;
+    struct fann *f;
     enum fann_errorfunc_enum train_error;
     VALUE ret_val;
-    Data_Get_Struct (self, struct fann, f);
+    Data_Get_Struct(self, struct fann, f);
 
     train_error = fann_get_train_error_function(f);
 
-    if(train_error==FANN_ERRORFUNC_LINEAR)
+    if (train_error == FANN_ERRORFUNC_LINEAR)
     {
         ret_val = ID2SYM(rb_intern("linear"));
     }
-    else if(train_error==FANN_ERRORFUNC_TANH)
+    else
     {
         ret_val = ID2SYM(rb_intern("tanh"));
     }
@@ -954,23 +1022,32 @@ static VALUE set_training_algorithm(VALUE self, VALUE train_error_function)
 {
     Check_Type(train_error_function, T_SYMBOL);
 
-    ID id=SYM2ID(train_error_function);
+    ID id = SYM2ID(train_error_function);
     enum fann_train_enum fann_train_algorithm;
 
-    if(id==rb_intern("incremental")) {
+    if (id == rb_intern("incremental"))
+    {
         fann_train_algorithm = FANN_TRAIN_INCREMENTAL;
-    }   else if(id==rb_intern("batch")) {
+    }
+    else if (id == rb_intern("batch"))
+    {
         fann_train_algorithm = FANN_TRAIN_BATCH;
-    }   else if(id==rb_intern("rprop")) {
+    }
+    else if (id == rb_intern("rprop"))
+    {
         fann_train_algorithm = FANN_TRAIN_RPROP;
-    }   else if(id==rb_intern("quickprop")) {
+    }
+    else if (id == rb_intern("quickprop"))
+    {
         fann_train_algorithm = FANN_TRAIN_QUICKPROP;
-    }   else {
+    }
+    else
+    {
         rb_raise(rb_eRuntimeError, "Unrecognized training algorithm function: [%s]", rb_id2name(SYM2ID(train_error_function)));
     }
 
-    struct fann* f;
-    Data_Get_Struct (self, struct fann, f);
+    struct fann *f;
+    Data_Get_Struct(self, struct fann, f);
     fann_set_training_algorithm(f, fann_train_algorithm);
     return self;
 }
@@ -979,20 +1056,27 @@ static VALUE set_training_algorithm(VALUE self, VALUE train_error_function)
             :incremental, :batch, :rprop, :quickprop */
 static VALUE get_training_algorithm(VALUE self)
 {
-    struct fann* f;
+    struct fann *f;
     enum fann_train_enum fann_train_algorithm;
     VALUE ret_val;
-    Data_Get_Struct (self, struct fann, f);
+    Data_Get_Struct(self, struct fann, f);
 
     fann_train_algorithm = fann_get_training_algorithm(f);
 
-    if(fann_train_algorithm==FANN_TRAIN_INCREMENTAL) {
+    if (fann_train_algorithm == FANN_TRAIN_INCREMENTAL)
+    {
         ret_val = ID2SYM(rb_intern("incremental"));
-    } else if(fann_train_algorithm==FANN_TRAIN_BATCH) {
+    }
+    else if (fann_train_algorithm == FANN_TRAIN_BATCH)
+    {
         ret_val = ID2SYM(rb_intern("batch"));
-    } else if(fann_train_algorithm==FANN_TRAIN_RPROP) {
+    }
+    else if (fann_train_algorithm == FANN_TRAIN_RPROP)
+    {
         ret_val = ID2SYM(rb_intern("rprop"));
-    } else if(fann_train_algorithm==FANN_TRAIN_QUICKPROP) {
+    }
+    else if (fann_train_algorithm == FANN_TRAIN_QUICKPROP)
+    {
         ret_val = ID2SYM(rb_intern("quickprop"));
     }
     return ret_val;
@@ -1005,19 +1089,24 @@ static VALUE get_training_algorithm(VALUE self)
 static VALUE set_train_stop_function(VALUE self, VALUE train_stop_function)
 {
     Check_Type(train_stop_function, T_SYMBOL);
-    ID id=SYM2ID(train_stop_function);
+    ID id = SYM2ID(train_stop_function);
     enum fann_stopfunc_enum fann_train_stop_function;
 
-    if(id==rb_intern("mse")) {
+    if (id == rb_intern("mse"))
+    {
         fann_train_stop_function = FANN_STOPFUNC_MSE;
-    }   else if(id==rb_intern("bit")) {
+    }
+    else if (id == rb_intern("bit"))
+    {
         fann_train_stop_function = FANN_STOPFUNC_BIT;
-    }   else {
+    }
+    else
+    {
         rb_raise(rb_eRuntimeError, "Unrecognized stop function: [%s]", rb_id2name(SYM2ID(train_stop_function)));
     }
 
-    struct fann* f;
-    Data_Get_Struct (self, struct fann, f);
+    struct fann *f;
+    Data_Get_Struct(self, struct fann, f);
     fann_set_train_stop_function(f, fann_train_stop_function);
     return self;
 }
@@ -1026,31 +1115,30 @@ static VALUE set_train_stop_function(VALUE self, VALUE train_stop_function)
             :mse, :bit */
 static VALUE get_train_stop_function(VALUE self)
 {
-    struct fann* f;
+    struct fann *f;
     enum fann_stopfunc_enum train_stop;
     VALUE ret_val;
-    Data_Get_Struct (self, struct fann, f);
+    Data_Get_Struct(self, struct fann, f);
 
     train_stop = fann_get_train_stop_function(f);
 
-    if(train_stop==FANN_STOPFUNC_MSE)
+    if (train_stop == FANN_STOPFUNC_MSE)
     {
         ret_val = ID2SYM(rb_intern("mse")); // (rb_str_new2("FANN_NETTYPE_LAYER"));
     }
-    else if(train_stop==FANN_STOPFUNC_BIT)
+    else // if(train_stop==FANN_STOPFUNC_BIT)
     {
         ret_val = ID2SYM(rb_intern("bit")); // (rb_str_new2("FANN_NETTYPE_SHORTCUT"));
     }
     return ret_val;
 }
 
-
 /** Will print the connections of the ann in a compact matrix,
         for easy viewing of the internals of the ann. */
 static VALUE print_connections(VALUE self)
 {
-    struct fann* f;
-    Data_Get_Struct (self, struct fann, f);
+    struct fann *f;
+    Data_Get_Struct(self, struct fann, f);
     fann_print_connections(f);
     return self;
 }
@@ -1058,8 +1146,8 @@ static VALUE print_connections(VALUE self)
 /** Print current NN parameters to stdout */
 static VALUE print_parameters(VALUE self)
 {
-    struct fann* f;
-    Data_Get_Struct (self, struct fann, f);
+    struct fann *f;
+    Data_Get_Struct(self, struct fann, f);
     fann_print_parameters(f);
     return Qnil;
 }
@@ -1071,8 +1159,8 @@ static VALUE randomize_weights(VALUE self, VALUE min_weight, VALUE max_weight)
 {
     Check_Type(min_weight, T_FLOAT);
     Check_Type(max_weight, T_FLOAT);
-    struct fann* f;
-    Data_Get_Struct (self, struct fann, f);
+    struct fann *f;
+    Data_Get_Struct(self, struct fann, f);
     fann_randomize_weights(f, NUM2DBL(min_weight), NUM2DBL(max_weight));
     return self;
 }
@@ -1081,32 +1169,31 @@ static VALUE randomize_weights(VALUE self, VALUE min_weight, VALUE max_weight)
 
     Run neural net on array<Float> of inputs with current parameters.
     Returns array<Float> as output  */
-static VALUE run (VALUE self, VALUE inputs)
+static VALUE run(VALUE self, VALUE inputs)
 {
     Check_Type(inputs, T_ARRAY);
 
-  struct fann* f;
-    int i;
-    fann_type* outputs;
+    struct fann *f;
+    unsigned int i;
+    fann_type *outputs;
 
     // Convert inputs to type needed for NN:
     unsigned int len = RARRAY_LEN(inputs);
     fann_type fann_inputs[len];
-    for (i=0; i<len; i++)
+    for (i = 0; i < len; i++)
     {
         fann_inputs[i] = NUM2DBL(RARRAY_PTR(inputs)[i]);
     }
 
-
     // Obtain NN & run method:
-  Data_Get_Struct (self, struct fann, f);
+    Data_Get_Struct(self, struct fann, f);
     outputs = fann_run(f, fann_inputs);
 
     // Create ruby array & set outputs:
     VALUE arr;
     arr = rb_ary_new();
-    unsigned int output_len=fann_get_num_output(f);
-    for (i=0; i<output_len; i++)
+    unsigned int output_len = fann_get_num_output(f);
+    for (i = 0; i < output_len; i++)
     {
         rb_ary_push(arr, rb_float_new(outputs[i]));
     }
@@ -1122,10 +1209,10 @@ static VALUE init_weights(VALUE self, VALUE train_data)
 
     Check_Type(train_data, T_DATA);
 
-    struct fann* f;
-    struct fann_train_data* t;
-    Data_Get_Struct (self, struct fann, f);
-    Data_Get_Struct (train_data, struct fann_train_data, t);
+    struct fann *f;
+    struct fann_train_data *t;
+    Data_Get_Struct(self, struct fann, f);
+    Data_Get_Struct(train_data, struct fann_train_data, t);
 
     fann_init_weights(f, t);
     return self;
@@ -1141,7 +1228,7 @@ static VALUE train(VALUE self, VALUE input, VALUE expected_output)
     Check_Type(input, T_ARRAY);
     Check_Type(expected_output, T_ARRAY);
 
-    struct fann* f;
+    struct fann *f;
     Data_Get_Struct(self, struct fann, f);
 
     unsigned int num_input = RARRAY_LEN(input);
@@ -1149,13 +1236,15 @@ static VALUE train(VALUE self, VALUE input, VALUE expected_output)
 
     fann_type data_input[num_input], data_output[num_output];
 
-    int i;
+    unsigned int i;
 
-    for (i = 0; i < num_input; i++) {
+    for (i = 0; i < num_input; i++)
+    {
         data_input[i] = NUM2DBL(RARRAY_PTR(input)[i]);
     }
 
-    for (i = 0; i < num_output; i++) {
+    for (i = 0; i < num_output; i++)
+    {
         data_output[i] = NUM2DBL(RARRAY_PTR(expected_output)[i]);
     }
 
@@ -1178,10 +1267,10 @@ static VALUE train_on_data(VALUE self, VALUE train_data, VALUE max_epochs, VALUE
     Check_Type(epochs_between_reports, T_FIXNUM);
     Check_Type(desired_error, T_FLOAT);
 
-    struct fann* f;
-    struct fann_train_data* t;
-    Data_Get_Struct (self, struct fann, f);
-    Data_Get_Struct (train_data, struct fann_train_data, t);
+    struct fann *f;
+    struct fann_train_data *t;
+    Data_Get_Struct(self, struct fann, f);
+    Data_Get_Struct(train_data, struct fann_train_data, t);
 
     unsigned int fann_max_epochs = NUM2INT(max_epochs);
     unsigned int fann_epochs_between_reports = NUM2INT(epochs_between_reports);
@@ -1196,10 +1285,10 @@ static VALUE train_on_data(VALUE self, VALUE train_data, VALUE max_epochs, VALUE
 static VALUE train_epoch(VALUE self, VALUE train_data)
 {
     Check_Type(train_data, T_DATA);
-    struct fann* f;
-    struct fann_train_data* t;
-    Data_Get_Struct (self, struct fann, f);
-    Data_Get_Struct (train_data, struct fann_train_data, t);
+    struct fann *f;
+    struct fann_train_data *t;
+    Data_Get_Struct(self, struct fann, f);
+    Data_Get_Struct(train_data, struct fann_train_data, t);
     return rb_float_new(fann_train_epoch(f, t));
 }
 
@@ -1209,10 +1298,10 @@ static VALUE train_epoch(VALUE self, VALUE train_data)
 static VALUE test_data(VALUE self, VALUE train_data)
 {
     Check_Type(train_data, T_DATA);
-    struct fann* f;
-    struct fann_train_data* t;
-    Data_Get_Struct (self, struct fann, f);
-    Data_Get_Struct (train_data, struct fann_train_data, t);
+    struct fann *f;
+    struct fann_train_data *t;
+    Data_Get_Struct(self, struct fann, f);
+    Data_Get_Struct(train_data, struct fann_train_data, t);
     return rb_float_new(fann_test_data(f, t));
 }
 
@@ -1249,10 +1338,10 @@ static VALUE cascadetrain_on_data(VALUE self, VALUE train_data, VALUE max_neuron
     Check_Type(neurons_between_reports, T_FIXNUM);
     Check_Type(desired_error, T_FLOAT);
 
-    struct fann* f;
-    struct fann_train_data* t;
-    Data_Get_Struct (self, struct fann, f);
-    Data_Get_Struct (train_data, struct fann_train_data, t);
+    struct fann *f;
+    struct fann_train_data *t;
+    Data_Get_Struct(self, struct fann, f);
+    Data_Get_Struct(train_data, struct fann_train_data, t);
 
     unsigned int fann_max_neurons = NUM2INT(max_neurons);
     unsigned int fann_neurons_between_reports = NUM2INT(neurons_between_reports);
@@ -1442,13 +1531,13 @@ static VALUE set_learning_momentum(VALUE self, VALUE learning_momentum)
 static VALUE set_cascade_activation_functions(VALUE self, VALUE cascade_activation_functions)
 {
     Check_Type(cascade_activation_functions, T_ARRAY);
-    struct fann* f;
-    Data_Get_Struct (self, struct fann, f);
+    struct fann *f;
+    Data_Get_Struct(self, struct fann, f);
 
-    unsigned int cnt = RARRAY_LEN(cascade_activation_functions);
+    unsigned long cnt = RARRAY_LEN(cascade_activation_functions);
     enum fann_activationfunc_enum fann_activation_functions[cnt];
-    int i;
-    for (i=0; i<cnt; i++)
+    unsigned int i;
+    for (i = 0; i < cnt; i++)
     {
         fann_activation_functions[i] = sym_to_activation_function(RARRAY_PTR(cascade_activation_functions)[i]);
     }
@@ -1461,16 +1550,16 @@ static VALUE set_cascade_activation_functions(VALUE self, VALUE cascade_activati
         the candidates.  The default is [:sigmoid, :sigmoid_symmetric, :gaussian, :gaussian_symmetric, :elliot, :elliot_symmetric] */
 static VALUE get_cascade_activation_functions(VALUE self)
 {
-    struct fann* f;
-    Data_Get_Struct (self, struct fann, f);
+    struct fann *f;
+    Data_Get_Struct(self, struct fann, f);
     unsigned int cnt = fann_get_cascade_activation_functions_count(f);
-    enum fann_activationfunc_enum* fann_functions = fann_get_cascade_activation_functions(f);
+    enum fann_activationfunc_enum *fann_functions = fann_get_cascade_activation_functions(f);
 
     // Create ruby array & set outputs:
     VALUE arr;
     arr = rb_ary_new();
-    int i;
-    for (i=0; i<cnt; i++)
+    unsigned int i;
+    for (i = 0; i < cnt; i++)
     {
         rb_ary_push(arr, activation_function_to_sym(fann_functions[i]));
     }
@@ -1506,13 +1595,13 @@ static VALUE set_cascade_num_candidate_groups(VALUE self, VALUE cascade_num_cand
 static VALUE set_cascade_activation_steepnesses(VALUE self, VALUE cascade_activation_steepnesses)
 {
     Check_Type(cascade_activation_steepnesses, T_ARRAY);
-    struct fann* f;
-    Data_Get_Struct (self, struct fann, f);
+    struct fann *f;
+    Data_Get_Struct(self, struct fann, f);
 
     unsigned int cnt = RARRAY_LEN(cascade_activation_steepnesses);
     fann_type fann_activation_steepnesses[cnt];
-    int i;
-    for (i=0; i<cnt; i++)
+    unsigned int i;
+    for (i = 0; i < cnt; i++)
     {
         fann_activation_steepnesses[i] = NUM2DBL(RARRAY_PTR(cascade_activation_steepnesses)[i]);
     }
@@ -1525,16 +1614,16 @@ static VALUE set_cascade_activation_steepnesses(VALUE self, VALUE cascade_activa
         the candidates. */
 static VALUE get_cascade_activation_steepnesses(VALUE self)
 {
-    struct fann* f;
-    Data_Get_Struct (self, struct fann, f);
-    fann_type* fann_steepnesses = fann_get_cascade_activation_steepnesses(f);
+    struct fann *f;
+    Data_Get_Struct(self, struct fann, f);
+    fann_type *fann_steepnesses = fann_get_cascade_activation_steepnesses(f);
     unsigned int cnt = fann_get_cascade_activation_steepnesses_count(f);
 
     // Create ruby array & set outputs:
     VALUE arr;
     arr = rb_ary_new();
-    int i;
-    for (i=0; i<cnt; i++)
+    unsigned int i;
+    for (i = 0; i < cnt; i++)
     {
         rb_ary_push(arr, rb_float_new(fann_steepnesses[i]));
     }
@@ -1547,21 +1636,21 @@ static VALUE get_cascade_activation_steepnesses(VALUE self)
     Save the entire network to configuration file with given name */
 static VALUE nn_save(VALUE self, VALUE filename)
 {
-    struct fann* f;
-    Data_Get_Struct (self, struct fann, f);
+    struct fann *f;
+    Data_Get_Struct(self, struct fann, f);
     int status = fann_save(f, StringValuePtr(filename));
     return INT2NUM(status);
 }
 
 /** Initializes class under RubyFann module/namespace. */
-void Init_ruby_fann ()
+void Init_ruby_fann()
 {
     // RubyFann module/namespace:
-    m_rb_fann_module = rb_define_module ("RubyFann");
+    m_rb_fann_module = rb_define_module("RubyFann");
 
     // Standard NN class:
-    m_rb_fann_standard_class = rb_define_class_under (m_rb_fann_module, "Standard", rb_cObject);
-    rb_define_alloc_func (m_rb_fann_standard_class, fann_allocate);
+    m_rb_fann_standard_class = rb_define_class_under(m_rb_fann_module, "Standard", rb_cObject);
+    rb_define_alloc_func(m_rb_fann_standard_class, fann_allocate);
     rb_define_method(m_rb_fann_standard_class, "initialize", fann_initialize, 1);
     rb_define_method(m_rb_fann_standard_class, "init_weights", init_weights, 1);
     rb_define_method(m_rb_fann_standard_class, "set_activation_function", set_activation_function, 3);
@@ -1624,7 +1713,6 @@ void Init_ruby_fann ()
     rb_define_method(m_rb_fann_standard_class, "get_training_algorithm", get_training_algorithm, 0);
     rb_define_method(m_rb_fann_standard_class, "set_training_algorithm", set_training_algorithm, 1);
 
-
     // Cascade functions:
     rb_define_method(m_rb_fann_standard_class, "cascadetrain_on_data", cascadetrain_on_data, 4);
     rb_define_method(m_rb_fann_standard_class, "get_cascade_output_change_fraction", get_cascade_output_change_fraction, 0);
@@ -1654,14 +1742,13 @@ void Init_ruby_fann ()
     rb_define_method(m_rb_fann_standard_class, "set_cascade_num_candidate_groups", set_cascade_num_candidate_groups, 1);
     rb_define_method(m_rb_fann_standard_class, "save", nn_save, 1);
 
-
     // Uncomment for fixed-point mode (also recompile fann).  Probably not going to be needed:
-    //rb_define_method(clazz, "get_decimal_point", get_decimal_point, 0);
-    //rb_define_method(clazz, "get_multiplier", get_multiplier, 0);
+    // rb_define_method(clazz, "get_decimal_point", get_decimal_point, 0);
+    // rb_define_method(clazz, "get_multiplier", get_multiplier, 0);
 
     // Shortcut NN class (duplicated from above so that rdoc generation tools can find the methods:):
-    m_rb_fann_shortcut_class = rb_define_class_under (m_rb_fann_module, "Shortcut", rb_cObject);
-    rb_define_alloc_func (m_rb_fann_shortcut_class, fann_allocate);
+    m_rb_fann_shortcut_class = rb_define_class_under(m_rb_fann_module, "Shortcut", rb_cObject);
+    rb_define_alloc_func(m_rb_fann_shortcut_class, fann_allocate);
     rb_define_method(m_rb_fann_shortcut_class, "initialize", fann_initialize, 1);
     rb_define_method(m_rb_fann_shortcut_class, "init_weights", init_weights, 1);
     rb_define_method(m_rb_fann_shortcut_class, "set_activation_function", set_activation_function, 3);
@@ -1753,10 +1840,9 @@ void Init_ruby_fann ()
     rb_define_method(m_rb_fann_shortcut_class, "set_cascade_num_candidate_groups", set_cascade_num_candidate_groups, 1);
     rb_define_method(m_rb_fann_shortcut_class, "save", nn_save, 1);
 
-
     // TrainData NN class:
-    m_rb_fann_train_data_class = rb_define_class_under (m_rb_fann_module, "TrainData", rb_cObject);
-    rb_define_alloc_func (m_rb_fann_train_data_class, fann_training_data_allocate);
+    m_rb_fann_train_data_class = rb_define_class_under(m_rb_fann_module, "TrainData", rb_cObject);
+    rb_define_alloc_func(m_rb_fann_train_data_class, fann_training_data_allocate);
     rb_define_method(m_rb_fann_train_data_class, "initialize", fann_train_data_initialize, 1);
     rb_define_method(m_rb_fann_train_data_class, "length", length_train_data, 0);
     rb_define_method(m_rb_fann_train_data_class, "shuffle", shuffle, 0);

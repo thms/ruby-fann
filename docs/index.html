@@ -11,13 +11,14 @@
   var index_rel_prefix = "./";
 </script>
 
-<script src="./js/jquery.js"></script>
-<script src="./js/darkfish.js"></script>
+<script src="./js/navigation.js" defer></script>
+<script src="./js/search.js" defer></script>
+<script src="./js/search_index.js" defer></script>
+<script src="./js/searcher.js" defer></script>
+<script src="./js/darkfish.js" defer></script>
 
 <link href="./css/fonts.css" rel="stylesheet">
 <link href="./css/rdoc.css" rel="stylesheet">
-
-
 
 
 <body id="top" role="document" class="file">
@@ -54,13 +55,12 @@
   </div>
 
   <div id="project-metadata">
+    
     <div id="fileindex-section" class="nav-section">
   <h3>Pages</h3>
 
   <ul class="link-list">
-  
     <li><a href="./README_md.html">README</a>
-  
   </ul>
 </div>
 
@@ -68,18 +68,13 @@
   <h3>Class and Module Index</h3>
 
   <ul class="link-list">
-  
-    <li><a href="./RubyFann.html">RubyFann</a>
-  
-    <li><a href="./RubyFann/Shortcut.html">RubyFann::Shortcut</a>
-  
-    <li><a href="./RubyFann/Standard.html">RubyFann::Standard</a>
-  
-    <li><a href="./RubyFann/TrainData.html">RubyFann::TrainData</a>
-  
-    <li><a href="./RubyFann/VERSION.html">RubyFann::VERSION</a>
-  
-  </ul>
+  <li><details open><summary><code><a href="./RubyFann.html">RubyFann</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./RubyFann/Shortcut.html">Shortcut</a></code>
+  <li><code><a href="./RubyFann/Standard.html">Standard</a></code>
+  <li><code><a href="./RubyFann/TrainData.html">TrainData</a></code>
+  <li><code><a href="./RubyFann/VERSION.html">VERSION</a></code>
+  </ul></details>
 </div>
 
   </div>
@@ -90,17 +85,21 @@
 
 <h1 id="label-RubyFann"><a href="RubyFann.html"><code>RubyFann</code></a><span><a href="#label-RubyFann">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p><em>Artifical Intelligence in Ruby</em></p>
+<p><em>Fast</em> <strong>AI</strong></p>
+
+<p>— Neural Networks in <code>ruby</code></p>
 
 <p><a href="http://badge.fury.io/rb/ruby-fann"><img src="https://badge.fury.io/rb/ruby-fann.png"></a></p>
 
-<p><a href="RubyFann.html"><code>RubyFann</code></a>, or “ruby-fann” is a ruby gem that binds to FANN (Fast Artificial Neural Network) from within a ruby/rails environment. FANN is a is a free open source neural network library, which implements multilayer artificial neural networks with support for both fully connected and sparsely connected networks. It is easy to use, versatile, well documented, and fast. <a href="RubyFann.html"><code>RubyFann</code></a> makes working with neural networks a breeze using ruby, with the added benefit that most of the heavy lifting is done natively.</p>
+<p><img src="ruby-fann.png"></p>
+
+<p><a href="RubyFann.html"><code>RubyFann</code></a>, or “ruby-fann” is a Ruby Gem (no Rails required) that binds to FANN (Fast Artificial Neural Network) from within a ruby/rails environment. FANN is a is a free native open source neural network library, which implements multilayer artificial neural networks, supporting both fully-connected and sparsely-connected networks. It is easy to use, versatile, well documented, and fast. <code>RubyFann</code> makes working with neural networks a breeze using <code>ruby</code>, with the added benefit that most of the heavy lifting is done natively.</p>
 
 <p>A talk given by our friend Ethan from Big-Oh Studios at Lone Star Ruby 2013: <a href="http://confreaks.com/videos/2609-lonestarruby2013-neural-networks-with-rubyfann">confreaks.com/videos/2609-lonestarruby2013-neural-networks-with-rubyfann</a></p>
 
 <h2 id="label-Installation">Installation<span><a href="#label-Installation">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Add this line to your application&#39;s Gemfile:</p>
+<p>Add this line to your application’s Gemfile:</p>
 
 <pre class="ruby"><span class="ruby-identifier">gem</span> <span class="ruby-string">&#39;ruby-fann&#39;</span>
 </pre>
@@ -115,7 +114,7 @@
 
 <h2 id="label-Usage">Usage<span><a href="#label-Usage">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>First, Go here &amp; read about FANN. You don&#39;t need to install it before using the gem, but understanding FANN will help you understand what you can do with the ruby-fann gem: <a href="http://leenissen.dk/fann">leenissen.dk/fann</a>/</p>
+<p>First, Go here &amp; read about FANN. You don’t need to install it before using the gem, but understanding FANN will help you understand what you can do with the ruby-fann gem: <a href="http://leenissen.dk/fann">leenissen.dk/fann</a>/</p>
 
 <h2 id="label-Documentation-3A">Documentation:<span><a href="#label-Documentation-3A">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
@@ -179,6 +178,8 @@
 <p>Michal Pokorny</p>
 </li><li>
 <p>Scott Li (locksley)</p>
+</li><li>
+<p>alex.slotty</p>
 </li></ol>
 
 <h2 id="label-Contributing">Contributing<span><a href="#label-Contributing">&para;</a> <a href="#top">&uarr;</a></span></h2>
@@ -194,14 +195,12 @@
 <p>Create new Pull Request</p>
 </li></ol>
 
-
 </main>
-
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.1.0.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

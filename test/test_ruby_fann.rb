@@ -1,4 +1,7 @@
 require 'test/unit'
+require 'rubygems'
+require 'ruby-fann'
+
 class MyShortcut < RubyFann::Shortcut
   def initialize
     super(:num_inputs=>5, :num_outputs=>1)    
@@ -43,6 +46,7 @@ class RubyFannTest < Test::Unit::TestCase
     assert_equal(:shortcut, fann.get_network_type)
         
     sc = MyShortcut.new
+    assert_not_nil(sc)
   end
 
   def test_raises
@@ -88,6 +92,9 @@ class RubyFannTest < Test::Unit::TestCase
     fann.init_weights(training)
   end
   
+  def test_init_weights_bad_file
+    assert_raises(RuntimeError) { RubyFann::TrainData.new(:filename=>'test/bogus.train') }
+  end
   
   def test_print_connections
     fann = RubyFann::Standard.new(:num_inputs=>4, :hidden_neurons=>[3, 4, 3, 4], :num_outputs=>1)
@@ -142,7 +149,7 @@ class RubyFannTest < Test::Unit::TestCase
   
   def test_train_on_data
     train = RubyFann::TrainData.new(:inputs=>[[0.3, 0.4, 0.5], [0.1, 0.2, 0.3]], :desired_outputs=>[[0.7], [0.8]])
-    fann = RubyFann::Standard.new(:num_inputs=>3, :hidden_neurons=>[2, 8, 4, 3, 4], :num_outputs=>1)
+    fann = RubyFann::Standard.new(:num_inputs=>3, :hidden_neurons=>[2, 4, 2, 165], :num_outputs=>1)
     fann.train_on_data(train, 1000, 10, 0.1)
     outputs = fann.run([0.3, 0.2, 0.4])    
     puts "OUTPUT FROM RUN WAS #{outputs.inspect}"
@@ -327,39 +334,39 @@ class RubyFannTest < Test::Unit::TestCase
   end
 
   def test_cascade_output_change_fraction
-    verify_fann_attribute(:cascade_output_change_fraction, 0.222)
+    verify_fann_attribute(:cascade_output_change_fraction, 0.222, true)
   end
 
   def test_cascade_output_stagnation_epochs
-    verify_fann_attribute(:cascade_output_stagnation_epochs, 4)
+    verify_fann_attribute(:cascade_output_stagnation_epochs, 4, true)
   end
 
   def test_cascade_candidate_change_fraction
-    verify_fann_attribute(:cascade_candidate_change_fraction, 0.987)
+    verify_fann_attribute(:cascade_candidate_change_fraction, 0.987, true)
   end
 
   def test_cascade_candidate_stagnation_epochs
-    verify_fann_attribute(:cascade_candidate_stagnation_epochs, 5)
+    verify_fann_attribute(:cascade_candidate_stagnation_epochs, 7, true)
   end
 
   def test_cascade_weight_multiplier
-    verify_fann_attribute(:cascade_weight_multiplier, 0.754)
+    verify_fann_attribute(:cascade_weight_multiplier, 0.754, true)
   end
 
   def test_cascade_candidate_limit
-    verify_fann_attribute(:cascade_candidate_limit, 0.222)
+    verify_fann_attribute(:cascade_candidate_limit, 0.222, true)
   end
   
   def test_cascade_cascade_max_out_epochs
-    verify_fann_attribute(:cascade_max_out_epochs, 77)
+    verify_fann_attribute(:cascade_max_out_epochs, 77, true)
   end
 
   def test_cascade_max_cand_epochs
-    verify_fann_attribute(:cascade_max_cand_epochs, 66)
+    verify_fann_attribute(:cascade_max_cand_epochs, 66, true)
   end
   
   def test_cascade_num_candidate_groups
-    verify_fann_attribute(:cascade_num_candidate_groups, 6)
+    verify_fann_attribute(:cascade_num_candidate_groups, 6, true)
   end
     
   def test_cascade_num_candidates
@@ -438,11 +445,15 @@ class RubyFannTest < Test::Unit::TestCase
 
 private
   # Set & get fann attribute & verify:
-  def verify_fann_attribute(attr, val)
+  def verify_fann_attribute(attr, val, shortcut=false)
+    fann = nil
+    if shortcut then
+      fann = RubyFann::Shortcut.new(:num_inputs=>1, :num_outputs=>1)
+    else
     fann = RubyFann::Standard.new(:num_inputs=>1, :hidden_neurons=>[3, 4, 3, 4], :num_outputs=>1)
+    end
     fann.send("set_#{attr}", val)    
     assert_equal(val, fann.send("get_#{attr}"))    
   end
   
 end
-

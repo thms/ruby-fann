@@ -56,9 +56,9 @@ struct fann_train_data
 	FILE *error_log;
 	char *errstr;
 
-	unsigned int num_data;
-	unsigned int num_input;
-	unsigned int num_output;
+	unsigned long num_data;
+	unsigned long num_input;
+	unsigned long num_output;
 	fann_type **input;
 	fann_type **output;
 };

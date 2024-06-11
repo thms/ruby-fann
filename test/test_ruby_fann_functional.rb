@@ -27,7 +27,7 @@ class RubyFannFunctionalTest < Test::Unit::TestCase
   	puts("Training network.\n")
   	
 
-  	nn.train_on_data(training, 10000, 1000, 0.0)
+  	nn.train_on_data(training, 10000, 1000, 0.01)
   	printf("Saving network.\n")
   	nn.save("xor_float.net")
   	training.save("xor.train")
@@ -46,10 +46,7 @@ class RubyFannFunctionalTest < Test::Unit::TestCase
   def test_cascade_training_xor    
     nn = RubyFann::Shortcut.new(:num_inputs=>2, :num_outputs=>1)
 
-    input_data =  [[-1, -1], [-1, 1], [1, -1], [1, 1]]
-    output_data = [[-1.0],   [1.0],   [1.0],   [-1.0]]
-
-    training = RubyFann::TrainData.new(:inputs=>input_data, :desired_outputs=>output_data)     
+    training = RubyFann::TrainData.new(:inputs=>XOR_INPUT_DATA, :desired_outputs=>XOR_OUTPUT_DATA)
   	
   	puts("Training network.\n")
   	
@@ -59,7 +56,7 @@ class RubyFannFunctionalTest < Test::Unit::TestCase
   	nn.cascadetrain_on_data(training, 100, 1, 0.0);
   	nn.save("xor_cascade.net")
   	
-    verify_training_data(nn, training, input_data, output_data, expected_error=0.00000001)
+    verify_training_data(nn, training, XOR_INPUT_DATA, XOR_OUTPUT_DATA, expected_error=0.00000001)
   end
   
   def test_cascade_training_xor_network_loading
