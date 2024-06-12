@@ -383,7 +383,7 @@ static VALUE fann_initialize(VALUE self, VALUE hash)
     if (rb_respond_to(self, rb_intern("training_callback")))
     {
         fann_set_callback(ann, &fann_training_callback);
-        fann_set_user_data(ann, self);
+        fann_set_user_data(ann, (void *) self);
         // printf("found(%d).\n", ann->callback);
     }
     else
@@ -1687,7 +1687,7 @@ void Init_ruby_fann()
     rb_define_method(m_rb_fann_standard_class, "get_connection_rate", get_connection_rate, 0);
     rb_define_method(m_rb_fann_standard_class, "get_layer_array", get_layer_array, 0);
     rb_define_method(m_rb_fann_standard_class, "get_network_type", get_network_type, 0);
-    rb_define_method(m_rb_fann_standard_class, "get_neurons", get_neurons, 0);
+    rb_define_method(m_rb_fann_standard_class, "get_neurons", get_neurons, 1);
     rb_define_method(m_rb_fann_standard_class, "get_num_input", get_num_input, 0);
     rb_define_method(m_rb_fann_standard_class, "get_num_layers", get_num_layers, 0);
     rb_define_method(m_rb_fann_standard_class, "get_num_output", get_num_output, 0);
@@ -1785,7 +1785,7 @@ void Init_ruby_fann()
     rb_define_method(m_rb_fann_shortcut_class, "get_connection_rate", get_connection_rate, 0);
     rb_define_method(m_rb_fann_shortcut_class, "get_layer_array", get_layer_array, 0);
     rb_define_method(m_rb_fann_shortcut_class, "get_network_type", get_network_type, 0);
-    rb_define_method(m_rb_fann_shortcut_class, "get_neurons", get_neurons, 0);
+    rb_define_method(m_rb_fann_shortcut_class, "get_neurons", get_neurons, 1);
     rb_define_method(m_rb_fann_shortcut_class, "get_num_input", get_num_input, 0);
     rb_define_method(m_rb_fann_shortcut_class, "get_num_layers", get_num_layers, 0);
     rb_define_method(m_rb_fann_shortcut_class, "get_num_output", get_num_output, 0);
